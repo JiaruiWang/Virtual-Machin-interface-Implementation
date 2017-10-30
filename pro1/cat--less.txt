@@ -1,0 +1,32 @@
+main()
+{
+	//shell
+	if (fork() == 0)
+	{
+		//child: cat
+		pipe(pipe_fd);
+		if (fork() ==0)
+		{
+			//less
+			close(0);
+			dup(pipe_fd[0]);
+			close(pipe_fd[1]);
+			close(STDOUT);
+			open("out.txt");
+			exec(less);
+		}
+		else
+		{
+			//cat
+			close(STDOUT_FILENO);
+			dup(pipe_fd[1]);
+			close(pipe_fd[0]);
+			exec(cat);
+		}
+
+	}
+	else
+	{
+		//shell
+		wait(child);
+	}
